@@ -2,10 +2,10 @@ import sqlite3
 import re
 
 #Добавляем задание в бд
-def add_task(idUser,task, name_of_sub):
+def add_task(idUser,task, name_of_sub, username):
     connect = sqlite3.connect('homework.db')
     cursor = connect.cursor()
-    cursor.execute('INSERT INTO homework (`userId`, `task`,`subject`) VALUES (?,?,?)',(idUser,task, name_of_sub))
+    cursor.execute('INSERT INTO homework (`userId`, `task`,`subject`,`username`) VALUES (?,?,?,?)',(idUser,task, name_of_sub, username))
     connect.commit()
     cursor.close()
 
@@ -13,7 +13,7 @@ def add_task(idUser,task, name_of_sub):
 def show_task(name_of_sub):
     connect = sqlite3.connect('homework.db')
     cursor = connect.cursor()
-    cursor.execute('SELECT `task` FROM homework WHERE `subject` like ?',(name_of_sub,))
+    cursor.execute('SELECT `task`,`username`  FROM homework WHERE `subject` like ?',(name_of_sub,))
     data = cursor.fetchall()
     tasks = []
 
