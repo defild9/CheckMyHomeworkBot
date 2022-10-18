@@ -10,6 +10,7 @@ import database as db
 class UserData(StatesGroup):
     task = State()
     subject = State()
+    name = State()
 
 class ShowData(StatesGroup):
     show_data_by_subject = State()
@@ -42,13 +43,34 @@ async def set_text(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=UserData.subject)
 async def set_subject(message: types.Message, state: FSMContext):
+    username = message.from_user.username
+    if username == None:
+        async with state.proxy() as data:
+            data['subject'] = message.text
+            data['id'] = message.from_user.id
+        await message.answer("Введіть імя:")
+        await UserData.next()
+    else:
+        async with state.proxy() as data:
+            data['subject'] = message.text
+            data['id'] = message.from_user.id
+            data['username'] = f'@{message.from_user.username}'
+        await message.answer(f"Task:{data['task']}\nSubject:{data['subject']}\nYourId:{data['id']}",
+                             reply_markup=kb.manu)
+        await message.answer(f"{username}")
+        db.add_task(str(data['id']), str(data['task']), str(data['subject']), str(data['username']))
+        await state.finish()
+
+@dp.message_handler(state=UserData.name)
+async def set_username(message: types.Message, state:FSMContext):
     async with state.proxy() as data:
-        data['subject'] = message.text
-        data['id'] = message.from_user.id
-        data['username'] = f'@{message.from_user.username}'
-    await message.answer(f"Task:{data['task']}\nSubject:{data['subject']}\nYourId:{data['id']}",reply_markup=kb.manu)
+        data['username'] = message.text
+    await message.answer(f"Task:{data['task']}\nSubject:{data['subject']}\nYourId:{data['id']}",
+                         reply_markup=kb.manu)
     db.add_task(str(data['id']), str(data['task']), str(data['subject']), str(data['username']))
     await state.finish()
+
+
 #Show task
 @dp.message_handler(lambda message: message.text == "📜Показати завдання", state=None)
 async def show_tasks(message:types.Message):
