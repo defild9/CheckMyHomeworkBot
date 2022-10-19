@@ -35,8 +35,8 @@ def show_task(name_of_sub):
     return  final_data
 
 #Test delete
-def delete_task(task):
+def delete_task(task, subject, user_id):
     connect = sqlite3.connect('homework.db')
     cursor = connect.cursor()
-    cursor.execute('DELETE FROM homework where `task`=?', (task,))
+    cursor.execute('DELETE FROM homework where `task`=? and `subject` =? and `userId` =?', (task, subject, user_id))
     connect.commit()
