@@ -32,7 +32,16 @@ def show_task(name_of_sub):
         final.append(final_result)
 
     final_data = '\n'.join(final)
-    return  final_data
+    if len(final_data) == 0:
+        list_is_empty = "Завдань по данному предмету ще немає)"
+        return list_is_empty
+    else:
+        return final_data
+
+# def get_id_by_task(task):
+#     connect = sqlite3.connect('homework.db')
+#     cursor = connect.cursor()
+#     cursor.execute('SELECT FROM `userId` FROM where `task` = ?',(task,))
 
 #Test delete
 def delete_task(task, subject, user_id):
@@ -40,3 +49,5 @@ def delete_task(task, subject, user_id):
     cursor = connect.cursor()
     cursor.execute('DELETE FROM homework where `task`=? and `subject` =? and `userId` =?', (task, subject, user_id))
     connect.commit()
+    cursor.close()
+

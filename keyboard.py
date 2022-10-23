@@ -14,6 +14,7 @@ English = KeyboardButton("Англійська Мова")
 Biologi_Water = KeyboardButton("Біологічна оцінка якості води")
 Organizetion_teretory = KeyboardButton("Планування та організація територій")
 Turizm = KeyboardButton("Основи туристичної діяльності")
+exit = KeyboardButton("🔙Вихід")
 
 sub_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(Cartography,Land,Chemistry,English,Biologi_Water,
-                                                         Organizetion_teretory,Turizm)
+                                                         Organizetion_teretory,Turizm,exit)
